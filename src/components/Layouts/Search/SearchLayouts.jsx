@@ -13,7 +13,7 @@ const SearchLayouts = () => {
   const getMeals = async () => {
     try {
       const res = await axios.get(
-        `https://www.themealdb.com/api/json/v1/1/search.php?f=${decodedKeyword}`
+        `https://www.themealdb.com/api/json/v1/1/search.php?f=${name}`
       );
       setMeals(res?.data?.meals);
       console.log(res?.data.meals);
@@ -24,33 +24,41 @@ const SearchLayouts = () => {
 
   useEffect(() => {
     getMeals();
-  }, [decodedKeyword]);
+  }, [name]);
+
+  console.log(meals);
 
   return (
     <section className="min-h-screen py-16">
       <div className="max-w-[1200px] mx-auto w-[90%] mt-12">
         <PreviousButton />
       </div>
-      <h1 className="text-2xl font-bold text-center ">
-        Searh for "{decodedKeyword}"
-      </h1>
+      <h1 className="text-2xl font-bold text-center ">Searh for "{name}"</h1>
 
-      {meals?.data?.length > 0 ? (
-        <div className="max-w-[1200px] mx-auto w-[90%] grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {meals?.data?.map((item, index) => (
-            <CategoryCard
-              link={`/meals/${decodedKeyword}/${item.idMeal}`}
-              key={index}
-              name={item.strMeal}
-              image={item.strMealThumb}
+      <div className="max-w-[1200px] mx-auto w-[90%]">
+        {meals?.length > 0 ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {meals?.map((item, index) => (
+              <CategoryCard
+                link={`/meals/${decodedKeyword}/${item.idMeal}`}
+                key={index}
+                name={item.strMeal}
+                image={item.strMealThumb}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center gap-4 my-4 h-96">
+            <p className="text-2xl font-bold text-center">No data found</p>
+            <img
+              src="../empty-data.svg"
+              alt="empty data"
+              className="w-[30%]"
+              loading="lazy"
             />
-          ))}
-        </div>
-      ) : (
-        <div className="max-w-[1200px] mx-auto w-[90%] flex items-center justify-center">
-          <p>aa</p>
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </section>
   );
 };
